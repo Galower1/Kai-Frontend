@@ -17,7 +17,7 @@
     toast.error(data);
   });
 
-  let hotkeys: any[] = [{ hotkeyID: "123", name: "test" }];
+  let hotkeys: any[] = [];
   let expressions: string[] = [];
   let vtubeSocket: VtubeSocket;
   let modelStats: any = null;
@@ -90,7 +90,7 @@
     const hotkeyID = data.get("hotkeyID") as string;
     const expression = data.get("expression") as string;
 
-    const hotkey = hotkeys.find((hotkey) => Number(hotkey.hotkeyID) === Number(hotkeyID));
+    const hotkey = hotkeys.find((hotkey) => hotkey.hotkeyID === hotkeyID);
 
     bindedExpressions = [...bindedExpressions, { hotkeyID, expression, name: hotkey?.name }];
   }
