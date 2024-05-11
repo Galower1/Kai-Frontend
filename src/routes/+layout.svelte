@@ -21,7 +21,7 @@
 	<nav class="w-full p-5 justify-start items-start gap-[100px] inline-flex">
 		<div class="justify-start items-center gap-[25px] inline-flex grow">
 			<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight xl:text-5xl">
-				Neuro Control Panel
+				Kai Control Panel
 			</h1>
 			<div class="p-2.5 justify-start items-center gap-1 inline-flex">
 				<Button variant="link" href="/" class="leading-7">
