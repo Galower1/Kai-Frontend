@@ -17,11 +17,11 @@
     toast.error(data);
   });
 
-  let hotkeys: any[] = [];
+  let hotkeys: any[] = [{ hotkeyID: "123", name: "test" }];
   let expressions: string[] = [];
   let vtubeSocket: VtubeSocket;
   let modelStats: any = null;
-  let bindedExpressions: any = [];
+  let bindedExpressions: any[] = [];
   let expression = "";
   let vtubeAuthenticated = false;
 
@@ -51,7 +51,7 @@
     if (!vtubeAuthenticated) return;
 
     for (const binded of bindedExpressions) {
-      if (data.toLocaleLowerCase().includes(binded.expression)) {
+      if (data.toLowerCase().includes(binded.expression.toLowerCase())) {
         console.log("detected binding");
         vtubeSocket.vtubeMessage("HotkeyTriggerRequest", {
           hotkeyID: binded.hotkeyID,
@@ -74,6 +74,10 @@
     }
   }
 
+  function removeBind(expression: any) {
+    bindedExpressions = bindedExpressions.filter((binded) => binded.expression != expression);
+  }
+
   function addExpression() {
     if (!expressions.includes(expression)) {
       expressions = [...expressions, expression];
@@ -86,7 +90,7 @@
     const hotkeyID = data.get("hotkeyID") as string;
     const expression = data.get("expression") as string;
 
-    const hotkey = hotkeys.find((hotkey) => hotkey.hotkeyID === hotkeyID);
+    const hotkey = hotkeys.find((hotkey) => Number(hotkey.hotkeyID) === Number(hotkeyID));
 
     bindedExpressions = [...bindedExpressions, { hotkeyID, expression, name: hotkey?.name }];
   }
@@ -213,7 +217,11 @@
       <Card.Content>
         <div class="flex flex-wrap gap-2.5">
           {#each expressions as expression}
-            <Label>{expression}</Label>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div on:click={() => (expressions = expressions.filter((e) => e !== expression))}>
+              <Label>{expression}</Label>
+            </div>
           {/each}
         </div>
 
@@ -241,7 +249,7 @@
           </thead>
           <tbody>
             {#each bindedExpressions as binded}
-              <tr>
+              <tr on:click={() => removeBind(binded.expression)}>
                 <td>{binded.expression}</td>
                 <td>{binded.name}</td>
               </tr>
@@ -255,7 +263,7 @@
               <option value={expression}>{expression}</option>
             {/each}
           </select>
-          <select name="hotkey">
+          <select name="hotkeyID">
             {#each hotkeys as hotkey}
               <option value={hotkey.hotkeyID}>{hotkey.name}</option>
             {/each}
